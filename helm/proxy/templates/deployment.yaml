@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-proxy
+  namespace: {{ .Values.namespace }}
+  labels:
+    id: {{ .Values.labels.id }}
+    app: {{ .Values.labels.app }}
+    env: {{ .Values.labels.env }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      id: {{ .Values.labels.id }}
+  template:
+    metadata:
+      labels:
+        id: {{ .Values.labels.id }}
+        app: {{ .Values.labels.app }}
+        env: {{ .Values.labels.env }}
+    spec:
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          ports:
+            - containerPort: {{ .Values.service.port }}
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config

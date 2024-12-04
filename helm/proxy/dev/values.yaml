@@ -1,0 +1,37 @@
+namespace: proxy
+replicaCount: 1
+
+labels:
+  id: c0908323
+  app: nginx-proxy
+  env: dev
+
+image:
+  repository: nginx
+  tag: 1.21
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+
+config:
+  nginxConf: |
+    worker_processes auto;
+    events {
+        worker_connections 1024;
+    }
+    http {
+        server {
+            listen 80;
+            location / {
+                proxy_pass http://wordpress.wordpress-app.svc.cluster.local:80;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-Port $server_port;
+                proxy_set_header X-Forwarded-Host $host;
+            }
+        }
+    }

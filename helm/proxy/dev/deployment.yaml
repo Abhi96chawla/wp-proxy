@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-proxy
+  namespace: proxy
+  labels:
+    id: c0908323
+    app: nginx-proxy
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: c0908323
+  template:
+    metadata:
+      labels:
+        id: c0908323
+        app: nginx-proxy
+        env: dev
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+
+
+---
+# proxy/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-proxy
+  namespace: proxy
+  labels:
+    id: c0908323
+    app: nginx-proxy
+    env: dev
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    id: c0908323
+

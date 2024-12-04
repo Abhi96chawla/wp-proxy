@@ -1,0 +1,28 @@
+namespace: wordpress-app
+replicaCount: 1
+
+labels:
+  id: c0908323
+  app: wordpress
+  env: dev
+
+image:
+  repository: wordpress
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+wordpress:
+  dbHost: "mysql.wordpress-db.svc.cluster.local"
+  dbUser: user
+  dbPassword: password
+  dbName: db
+
+# Secret values in Base64 encoding
+secrets:
+  WORDPRESS_DB_USER: dXNlcg==
+  WORDPRESS_DB_PASSWORD: cGFzc3dvcmQ=
+  WORDPRESS_DB_NAME: ZGJfZ3JvdXA=

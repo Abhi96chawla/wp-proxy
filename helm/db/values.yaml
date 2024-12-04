@@ -1,0 +1,24 @@
+replicaCount: 1
+
+namespace: wordpress-db
+
+labels:
+  id: c0908323
+  app: mysql
+  env: dev
+
+image:
+  repository: mysql
+  tag: 5.7
+  pullPolicy: IfNotPresent
+
+service:
+  name: mysql
+  type: ClusterIP
+  port: 3306
+
+env:
+  MYSQL_USER: user
+  MYSQL_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: myrootpass
+  MYSQL_DATABASE: db
