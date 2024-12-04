@@ -1,5 +1,5 @@
 namespace: wordpress-app
-replicaCount: 1
+replicaCount: 3
 
 labels:
   id: c0908323
